@@ -1,1 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Zen Cafe signature tea collection" />
+  <title>Zen Cafe | Signature Tea</title>
 
+  <style>
+    :root {
+      --gold: #e2b650;
+      --cream: #f8ead4;
+      --dark: #080604;
+      --card-width: 310px;
+      --card-height: 455px;
+      --radius: 440px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      overflow-x: hidden;
+      color: white;
+      background: #080604;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .page {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      padding: 38px 20px 85px;
+      background:
+        radial-gradient(circle at 50% 46%, rgba(226,182,80,.17), transparent 27%),
+        radial-gradient(circle at 14% 12%, rgba(44,100,55,.25), transparent 28%),
+        radial-gradient(circle at 88% 86%, rgba(127,28,43,.22), transparent 30%),
+        linear-gradient(145deg, #050403, #17110b 52%, #060504);
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.023) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.023) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events: none;
+    }
+
+    .nav {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 12px 18px;
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 18px;
+      background: rgba(10,8,5,.48);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 15px 45px rgba(0,0,0,.24);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: Georgia, serif;
+      font-size: 1.15rem;
+      letter-spacing: .1em;
+    }
+
+    .logo {
+      display: grid;
+      place-items: center;
+      width: 39px;
+      height: 39px;
+      border: 1px solid rgba(226,182,80,.55);
+      border-radius: 50%;
+      background: linear-gradient(145deg, #2e220e, #0d0a05);
+      color: var(--gold);
+      box-shadow: 0 0 28px rgba(226,182,80,.13);
+    }
+
+    .nav a {
+      color: rgba(255,255,255,.78);
+      text-decoration: none;
+      font-size: .92rem;
+    }
+
+    .hero {
+      position: relative;
+      z-index: 3;
+      max-width: 850px;
+      margin: 72px auto 22px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 16px;
+      color: var(--gold);
+      font-size: .76rem;
+      letter-spacing: .32em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, serif;
+      font-size: clamp(3rem, 7vw, 6.7rem);
+      font-weight: 500;
+      line-height: .92;
+      text-wrap: balance;
+    }
+
+    .hero p {
+      max-width: 620px;
+      margin: 22px auto 0;
+      color: rgba(255,255,255,.68);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 18px;
+      padding: 8px 13px;
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 999px;
+      color: rgba(255,255,255,.62);
+      background: rgba(255,255,255,.035);
+      font-size: .76rem;
+    }
+
+    .stage {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 625px;
+      perspective: 1500px;
+      perspective-origin: 50% 43%;
+      touch-action: pan-y;
+    }
+
+    .ring {
+      position: absolute;
+      top: 72px;
+      left: 50%;
+      width: var(--card-width);
+      height: var(--card-height);
+      transform-style: preserve-3d;
+      transform: translateX(-50%);
+      animation: rotateCarousel 24s linear infinite;
+    }
+
+    .stage:hover .ring {
+      animation-play-state: paused;
+    }
+
+    .card {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      border: 1px solid rgba(226,182,80,.43);
+      border-radius: 28px;
+      background: rgba(255,255,255,.05);
+      box-shadow:
+        0 38px 85px rgba(0,0,0,.58),
+        inset 0 1px rgba(255,255,255,.13);
+      transform:
+        rotateY(calc((360deg / 4) * var(--i)))
+        translateZ(var(--radius));
+      backface-visibility: hidden;
+      transition: filter .25s ease, box-shadow .25s ease;
+    }
+
+    .card:hover {
+      filter: brightness(1.08);
+      box-shadow:
+        0 46px 100px rgba(0,0,0,.7),
+        0 0 45px rgba(226,182,80,.15);
+    }
+
+    .tea-image {
+      position: absolute;
+      inset: 0;
+      background-repeat: no-repeat;
+      background-size: 100% 200%;
+      transform: scale(1.02);
+    }
+
+    .top-half {
+      background-position: center top;
+    }
+
+    .bottom-half {
+      background-position: center bottom;
+    }
+
+    .shade {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, rgba(0,0,0,.96) 5%, rgba(0,0,0,.40) 49%, rgba(0,0,0,.03) 76%),
+        linear-gradient(145deg, rgba(226,182,80,.08), transparent 45%);
+    }
+
+    .card-content {
+      position: absolute;
+      z-index: 3;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+    }
+
+    .tag {
+      display: inline-flex;
+      padding: 7px 11px;
+      border: 1px solid rgba(226,182,80,.44);
+      border-radius: 999px;
+      background: rgba(0,0,0,.42);
+      color: var(--gold);
+      font-size: .66rem;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      backdrop-filter: blur(10px);
+    }
+
+    .card h2 {
+      margin: 14px 0 8px;
+      font-family: Georgia, serif;
+      font-size: 2.15rem;
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .card p {
+      margin: 0 0 17px;
+      color: rgba(255,255,255,.72);
+      font-size: .88rem;
+      line-height: 1.5;
+    }
+
+    .price {
+      display: inline-flex;
+      min-width: 110px;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 17px;
+      border-radius: 14px;
+      color: #171006;
+      background: linear-gradient(135deg, #f1d17e, #a56e15);
+      box-shadow: 0 13px 27px rgba(0,0,0,.33), inset 0 1px rgba(255,255,255,.45);
+      font-size: 1.06rem;
+      font-weight: 800;
+    }
+
+    .steam {
+      position: absolute;
+      z-index: 2;
+      top: 17%;
+      left: 57%;
+      width: 18px;
+      height: 115px;
+      border-radius: 50%;
+      background: linear-gradient(to top, transparent, white, transparent);
+      filter: blur(11px);
+      opacity: 0;
+      animation: steam 4.3s ease-in-out infinite;
+    }
+
+    .steam.two {
+      left: 65%;
+      animation-delay: 1.5s;
+    }
+
+    .floor {
+      position: absolute;
+      left: 50%;
+      bottom: 20px;
+      width: 760px;
+      height: 180px;
+      transform: translateX(-50%) rotateX(74deg);
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(226,182,80,.24), rgba(0,0,0,.38) 45%, transparent 73%);
+      filter: blur(7px);
+    }
+
+    .footer {
+      position: relative;
+      z-index: 3;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding-top: 14px;
+      text-align: center;
+      color: rgba(255,255,255,.43);
+      font-size: .78rem;
+    }
+
+    @keyframes rotateCarousel {
+      from { transform: translateX(-50%) rotateY(0deg); }
+      to { transform: translateX(-50%) rotateY(360deg); }
+    }
+
+    @keyframes steam {
+      0% {
+        transform: translateY(20px) scaleX(.8);
+        opacity: 0;
+      }
+      35% {
+        opacity: .22;
+      }
+      100% {
+        transform: translateY(-78px) translateX(20px) scaleX(1.5);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 920px) {
+      :root {
+        --card-width: 255px;
+        --card-height: 395px;
+        --radius: 325px;
+      }
+
+      .stage {
+        height: 555px;
+      }
+
+      .page {
+        padding-bottom: 60px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      :root {
+        --card-width: 210px;
+        --card-height: 330px;
+        --radius: 245px;
+      }
+
+      .page {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .nav {
+        padding: 10px 13px;
+      }
+
+      .nav a {
+        display: none;
+      }
+
+      .hero {
+        margin-top: 55px;
+      }
+
+      .hero p {
+        padding: 0 13px;
+      }
+
+      .stage {
+        height: 470px;
+      }
+
+      .ring {
+        top: 74px;
+      }
+
+      .card-content {
+        left: 17px;
+        right: 17px;
+        bottom: 17px;
+      }
+
+      .card h2 {
+        font-size: 1.55rem;
+      }
+
+      .card p {
+        display: none;
+      }
+
+      .price {
+        min-width: 92px;
+        min-height: 40px;
+        font-size: .9rem;
+      }
+
+      .floor {
+        width: 470px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ring,
+      .steam {
+        animation-play-state: paused;
+      }
+    }
+  
+    .nav-links { display:flex; align-items:center; gap:24px; }
+    .nav-links a { color:rgba(255,255,255,.78); text-decoration:none; font-size:.9rem; transition:color .25s ease; }
+    .nav-links a:hover { color:var(--gold); }
+
+    .story-section { position:relative; z-index:3; max-width:1180px; margin:20px auto 110px; padding:0 20px; }
+    .story-card { display:grid; grid-template-columns:1.05fr .95fr; min-height:560px; overflow:hidden;
+      border:1px solid rgba(226,182,80,.28); border-radius:34px; background:rgba(255,255,255,.04);
+      box-shadow:0 40px 100px rgba(0,0,0,.38); backdrop-filter:blur(12px); }
+    .story-image { position:relative; min-height:500px;
+      background:linear-gradient(to top,rgba(0,0,0,.60),rgba(0,0,0,.05)),
+      url('images/cardamon-kashmiri.png') center top/cover no-repeat; }
+    .story-image::after { content:"Tradition in every cup"; position:absolute; left:28px; bottom:28px;
+      padding:10px 14px; border:1px solid rgba(226,182,80,.38); border-radius:999px;
+      background:rgba(0,0,0,.46); color:var(--gold); font-size:.74rem; letter-spacing:.12em;
+      text-transform:uppercase; backdrop-filter:blur(10px); }
+    .story-content { display:flex; flex-direction:column; justify-content:center; padding:clamp(38px,6vw,78px);
+      background:radial-gradient(circle at 80% 15%,rgba(226,182,80,.12),transparent 34%),
+      linear-gradient(145deg,rgba(15,11,7,.97),rgba(27,19,11,.94)); }
+    .section-kicker { margin-bottom:15px; color:var(--gold); font-size:.72rem; letter-spacing:.28em; text-transform:uppercase; }
+    .story-content h2,.gallery-heading h2 { margin:0; font-family:Georgia,serif; font-size:clamp(2.5rem,5vw,4.8rem); font-weight:500; line-height:.98; }
+    .story-content p { margin:24px 0 0; color:rgba(255,255,255,.70); line-height:1.85; }
+    .story-quote { margin-top:28px; padding-left:18px; border-left:2px solid var(--gold); color:var(--cream);
+      font-family:Georgia,serif; font-size:1.2rem; font-style:italic; line-height:1.55; }
+
+    .gallery-section { position:relative; z-index:3; max-width:1180px; margin:0 auto 110px; padding:0 20px; }
+    .gallery-heading { max-width:760px; margin:0 auto 42px; text-align:center; }
+    .gallery-heading p { margin-top:18px; color:rgba(255,255,255,.66); line-height:1.7; }
+    .gallery-grid { display:grid; grid-template-columns:repeat(12,1fr); grid-auto-rows:230px; gap:18px; }
+    .gallery-item { position:relative; overflow:hidden; border:1px solid rgba(255,255,255,.10);
+      border-radius:24px; background:#111; box-shadow:0 24px 55px rgba(0,0,0,.32); cursor:pointer; }
+    .gallery-item.large { grid-column:span 7; grid-row:span 2; }
+    .gallery-item.medium,.gallery-item.small { grid-column:span 5; }
+    .gallery-item.wide { grid-column:span 7; }
+    .gallery-photo { position:absolute; inset:0; background-repeat:no-repeat; background-size:cover;
+      transition:transform .65s cubic-bezier(.2,.7,.2,1),filter .4s ease; }
+    .gallery-item:hover .gallery-photo { transform:scale(1.09); filter:brightness(1.08); }
+    .gallery-overlay { position:absolute; inset:0; display:flex; align-items:flex-end; padding:24px;
+      background:linear-gradient(to top,rgba(0,0,0,.86),transparent 60%); }
+    .gallery-text { transform:translateY(10px); transition:transform .35s ease; }
+    .gallery-item:hover .gallery-text { transform:translateY(0); }
+    .gallery-text span { color:var(--gold); font-size:.68rem; letter-spacing:.16em; text-transform:uppercase; }
+    .gallery-text h3 { margin:7px 0 0; font-family:Georgia,serif; font-size:1.65rem; font-weight:500; }
+
+    @media (max-width:800px) {
+      .nav-links { gap:12px; }
+      .nav-links a { font-size:.78rem; }
+      .story-card { grid-template-columns:1fr; }
+      .story-image { min-height:390px; }
+      .gallery-grid { grid-template-columns:1fr; grid-auto-rows:330px; }
+      .gallery-item.large,.gallery-item.medium,.gallery-item.small,.gallery-item.wide { grid-column:1; grid-row:auto; }
+    }
+    @media (max-width:520px) {
+      .nav-links a:nth-child(1),.nav-links a:nth-child(2) { display:none; }
+      .story-section,.gallery-section { padding-left:10px; padding-right:10px; }
+      .story-card { border-radius:24px; }
+      .story-content { padding:38px 25px; }
+      .gallery-grid { grid-auto-rows:280px; }
+    }
+
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <nav class="nav">
+      <div class="brand">
+        <div class="logo">Z</div>
+        <span>ZEN CAFE</span>
+      </div>
+      <div class="nav-links">
+        <a href="#tea-menu">Tea</a>
+        <a href="#story">Our Story</a>
+        <a href="#gallery">Gallery</a>
+      </div>
+    </nav>
+
+    <header class="hero" id="tea-menu">
+      <span class="eyebrow">Premium tea experience</span>
+      <h1>Signature Tea Collection</h1>
+      <p>
+        Four carefully selected teas presented in a continuously rotating 3D carousel.
+        Move the cursor over the products to pause the animation.
+      </p>
+      <div class="hint">↻ Rotates automatically</div>
+    </header>
+
+    <section class="stage" aria-label="Rotating tea menu">
+      <div class="ring">
+        <article class="card" style="--i: 0">
+          <div class="tea-image top-half" style="background-image:url('images/masala-pineapple.png')"></div>
+          <div class="shade"></div>
+          <div class="steam"></div>
+          <div class="steam two"></div>
+          <div class="card-content">
+            <span class="tag">Signature tea</span>
+            <h2>Masala Chai</h2>
+            <p>Classic milk tea blended with warming Indian spices.</p>
+            <span class="price">200 Rp</span>
+          </div>
+        </article>
+
+        <article class="card" style="--i: 1">
+          <div class="tea-image bottom-half" style="background-image:url('images/masala-pineapple.png')"></div>
+          <div class="shade"></div>
+          <div class="steam"></div>
+          <div class="steam two"></div>
+          <div class="card-content">
+            <span class="tag">Signature tea</span>
+            <h2>Pineapple Tea</h2>
+            <p>A fresh tropical tea with a bright pineapple flavour.</p>
+            <span class="price">200 Rp</span>
+          </div>
+        </article>
+
+        <article class="card" style="--i: 2">
+          <div class="tea-image top-half" style="background-image:url('images/cardamon-kashmiri.png')"></div>
+          <div class="shade"></div>
+          <div class="steam"></div>
+          <div class="steam two"></div>
+          <div class="card-content">
+            <span class="tag">Signature tea</span>
+            <h2>Cardamon Tea</h2>
+            <p>Aromatic tea infused with the warm taste of cardamom.</p>
+            <span class="price">200 Rp</span>
+          </div>
+        </article>
+
+        <article class="card" style="--i: 3">
+          <div class="tea-image bottom-half" style="background-image:url('images/cardamon-kashmiri.png')"></div>
+          <div class="shade"></div>
+          <div class="steam"></div>
+          <div class="steam two"></div>
+          <div class="card-content">
+            <span class="tag">Signature tea</span>
+            <h2>Kashmiri Chai</h2>
+            <p>Rich pink tea served with saffron, spices and nuts.</p>
+            <span class="price">200 Rp</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="floor"></div>
+    </section>
+
+
+    <section class="story-section" id="story">
+      <div class="story-card">
+        <div class="story-image" aria-label="Zen Cafe tea and spices"></div>
+        <div class="story-content">
+          <span class="section-kicker">Our story</span>
+          <h2>Every cup tells a story.</h2>
+          <p>Zen Cafe brings together traditional tea culture and a modern cafe experience. Our drinks are inspired by warm spices, carefully selected ingredients and the simple joy of sharing a cup with someone.</p>
+          <p>From aromatic cardamom tea to colourful Kashmiri chai, every drink is prepared to feel familiar, comforting and memorable.</p>
+          <div class="story-quote">“Inspired by tradition. Crafted with care. Served with calm.”</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="gallery-section" id="gallery">
+      <div class="gallery-heading">
+        <span class="section-kicker">Inside Zen Cafe</span>
+        <h2>A taste of the experience</h2>
+        <p>Explore our signature drinks, spices and colourful tea creations. Move the cursor over each image to discover more.</p>
+      </div>
+
+      <div class="gallery-grid">
+        <article class="gallery-item large">
+          <div class="gallery-photo" style="background-image:url('images/masala-pineapple.png');background-position:center top;"></div>
+          <div class="gallery-overlay"><div class="gallery-text"><span>Signature collection</span><h3>Masala Chai</h3></div></div>
+        </article>
+        <article class="gallery-item medium">
+          <div class="gallery-photo" style="background-image:url('images/cardamon-kashmiri.png');background-position:center top;"></div>
+          <div class="gallery-overlay"><div class="gallery-text"><span>Aromatic spices</span><h3>Cardamon Tea</h3></div></div>
+        </article>
+        <article class="gallery-item small">
+          <div class="gallery-photo" style="background-image:url('images/cardamon-kashmiri.png');background-position:center bottom;"></div>
+          <div class="gallery-overlay"><div class="gallery-text"><span>Rich and colourful</span><h3>Kashmiri Chai</h3></div></div>
+        </article>
+        <article class="gallery-item wide">
+          <div class="gallery-photo" style="background-image:url('images/masala-pineapple.png');background-position:center bottom;"></div>
+          <div class="gallery-overlay"><div class="gallery-text"><span>Tropical freshness</span><h3>Pineapple Tea</h3></div></div>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      © 2026 Zen Cafe · Signature Tea Collection
+    </footer>
+  </main>
+</body>
+</html>
